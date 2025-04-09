@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="csrf-token" content=" " />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="perfume store" />
+    <meta name="robots" content="" />
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="icons/favicon.ico" />
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>متجر عطور العذراء</title>
+
+</head>
+
+<body>
+    <div class="body" style="display: grid; gap: 2px;">
+        <!-- ========= الشريط العلوي ========= -->
+        <div class="top-navbar">
+            <button class="sidebar-toggle-btn" id="main-sidebar-toggle" aria-label="فتح القائمة الرئيسية">☰</button>
+            <div class="brand-logo">
+                <a href="#" id="brand-link-to-home-top">
+                    <!-- استخدام نفس الشعار الموجود في الفوتر -->
+                    <img width="60" src="icons/logo-casariha-04.png" alt="diezo">
+                </a>
+            </div>
+            <button class="sidebar-toggle-btn" id="cart-sidebar-toggle" aria-label="فتح سلة المشتريات">
+                🛒 <span id="cart-count-badge" style="display: none;">0</span>
+            </button>
+        </div>
+
+        <!-- ========= الشريط الجانبي الرئيسي (للتنقل) ========= -->
+        <div class="main-sidebar" id="mainSidebar">
+            <button class="close-sidebar-btn" data-target="mainSidebar" aria-label="إغلاق القائمة الرئيسية">×</button>
+            <h3>القائمة الرئيسية</h3>
+            <ul class="main-nav-list">
+                <li><a href="#" class="sidebar-nav-link" data-action="showMain">الرئيسية</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="aboutStor">عن المتجر</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="paymentMethods">طرق الدفع</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="shippingHandling">الشحن والتسليم</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="termsOfUse">شروط الاستخدام</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="ReplacementRefund">سياسة الاستبدال
+                        والاسترجاع</a>
+                </li>
+                <li><a href="#" class="sidebar-nav-link" data-content-id="privacyPolicy">سياسة الخصوصية</a></li>
+                <!-- أضف روابط أخرى هنا إذا لزم الأمر -->
+                <li><a href="#" class="sidebar-nav-link" data-action="alert" data-message="صفحة 'اتصل بنا' قيد الإنشاء.">اتصل بنا</a></li>
+                <li><a href="#" class="sidebar-nav-link" data-action="alert" data-message="صفحة 'الأسئلة المتكررة' قيد الإنشاء.">الأسئلة المتكررة</a></li>
+            </ul>
+        </div>
+        <div class="sidebar-overlay" id="mainSidebarOverlay" data-target="mainSidebar"></div>
+
+        <!-- ========= الشريط الجانبي للسلة ========= -->
+        <div class="cart-sidebar" id="cartSidebar">
+            <button class="close-sidebar-btn" data-target="cartSidebar" aria-label="إغلاق سلة المشتريات">×</button>
+            <!-- === محتوى قسم السلة يتم نقله هنا بالكامل === -->
+            <h2>سلة المشتريات</h2>
+            <ul id="cart-items">
+                <!-- عناصر السلة الديناميكية ستظهر هنا -->
+            </ul>
+            <!-- === عرض المجموع الإجمالي === -->
+            <div id="cart-total-display" style="display: none;">
+                <strong>المجموع الإجمالي: <span id="cart-total-value">0</span> درهم</strong>
+            </div>
+            <!-- ========================== -->
+            <!-- === أزرار التحكم بالسلة === -->
+            <div class="cart-actions">
+                <button id="checkout-btn" class="js-open-checkout add-to-cart-btn" data-trigger-type="dynamic-cart" style="display: none;">إتمام الشراء</button>
+                <button id="clear-cart-btn" style="display: none;">إفراغ السلة</button>
+            </div>
+            <!-- ========================= -->
+            <!-- === نهاية محتوى قسم السلة المنقول === -->
+        </div>
+        <div class="sidebar-overlay" id="cartSidebarOverlay" data-target="cartSidebar"></div>
+
+        <div class="container main-page-content" id="main-content-area">
+            <div class="special-offer">
+                <!-- الصورة اليمنى الثابتة -->
+                <div class="special-offer-content-left">
+                    <div class="zoom-container">
+                        <img id="mainImage" src="img/0d24824af52326a02a76dc9d7bcd9527-6.webp" alt="Zoom Image">
+                        <div id="zoomLens"></div>
+                    </div>
+
+
+                </div>
+
+                <!-- الصور العمودية القابلة للتمرير -->
+                <div class="special-offer-content-right">
+                    <div class="product-section-offer-buttons">
+                        <div class="product-section">
+                            <h1 class="single-title">باك 5 عطور من اختياركم بجودة عالية</h1>
+                        </div>
+                        <div class="special-offer-buttons">
+                            <!-- زر العرض الثابت - يبدأ ظاهر -->
+                            <button id="static-offer-checkout-btn" class="js-open-checkout add-to-cart-btn" data-trigger-type="static-offer" style="display: block;"> <!-- تأكد من أنه block -->
+                                اطلب باقة العرض الآن (5 أو 10 عطور)
+                            </button>
+                            <!-- زر السلة الديناميكي - يبدأ مخفي -->
+                            <button id="dynamic-cart-checkout-btn-special" class="js-open-checkout add-to-cart-btn" data-trigger-type="dynamic-cart" style="display: none;"> <!-- تأكد من أنه none -->
+                                إتمام شراء محتويات السلة
+                            </button>
+                        </div>
+                    </div>
+                    <div class="scroll-images" id="scrollImages">
+                        <!-- <button class="js-open-checkout" data-trigger-type="static-offer" style="display: block;">إتمام
+                            الشراء</button> -->
+                        <div><img src="img/IMG-20250210-WA0001.jpg" alt=""></div>
+                        <div><img src="img/IMG-20250210-WA0002.jpg" alt=""></div>
+                        <div><img src="img/IMG-20250210-WA0003.jpg" alt=""></div>
+                        <div><img src="img/IMG-20250210-WA0004.jpg" alt=""></div>
+                        <div><img src="img/IMG-20250210-WA0020.jpg" alt=""></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-main-page-content">
+                <h1>عطور diezo</h1>
+
+                <div class="products-grid">
+                    <!-- بطاقة المنتج: نسائي -->
+                    <div class="product-card" data-product-id="women">
+                        <img src="img/IMG-20250210-WA0001.jpg" alt="عطر نسائي">
+                        <h3>عطر diezo للنساء</h3>
+                        <div class="form-group">
+                            <label for="perfume-type-women">اختر نوع العطر:</label>
+
+
+                            <div class="searchable-select-container">
+                                <input type="text" class="searchable-select-input" placeholder="ابحث أو اختر..." data-target-select="perfume-type-women">
+                                <div class="custom-options-list"></div>
+                            </div>
+                            <select id="perfume-type-women" class="perfume-type-select" name="perfume-type">
+                                <!-- <option value="" disabled selected>اختر...</option> -->
+                                <option value="BOSS FEMME"> BOSS FEMME</option>
+                                <option value="HUGO WOMEN"> HUGO WOMEN</option>
+                                <option value="BOSS THE SCENT"> BOSS THE SCENT</option>
+                                <option value="MA VIE"> MA VIE</option>
+                                <option value="MA DAME"> MA DAME</option>
+                                <option value="SCANDAL"> SCANDAL</option>
+                                <option value="SCANDAL BY NIGHT"> SCANDAL BY NIGHT</option>
+                                <option value="LA BELLE"> LA BELLE</option>
+                                <option value="BONBON"> BONBON</option>
+                                <option value="FLOWER BOMB"> FLOWER BOMB</option>
+                                <option value="FLOWER BOMB INTENSE"> FLOWER BOMB INTENSE</option>
+                                <option value="COCONUT PASSION"> COCONUT PASSION</option>
+                                <option value="WICKED"> WICKED</option>
+                                <option value="JASMINE DREAM"> JASMINE DREAM</option>
+                                <option value="MIDNIGHT PETALS"> MIDNIGHT PETALS</option>
+                                <option value="FORBIDDEN BERRIES"> FORBIDDEN BERRIES</option>
+                                <option value="DARK ROMANTIC"> DARK ROMANTIC</option>
+                                <option value="MELON SOBRET"> MELON SOBRET</option>
+                                <option value="BALI CONCNUT PALM"> BALI CONCNUT PALM</option>
+                                <option value="LOVE SPELL"> LOVE SPELL</option>
+                                <option value="BARE VANILLA"> BARE VANILLA</option>
+                                <option value="TROPICAL SPRITZ"> TROPICAL SPRITZ</option>
+                                <option value="AQUA KISS"> AQUA KISS</option>
+                                <option value="SUNSET STRIPPED"> SUNSET STRIPPED</option>
+                                <option value="COCONUT"> COCONUT</option>
+                                <option value="BLACK OPIUM"> BLACK OPIUM</option>
+                                <option value="BLACK OPIUM INTENSE"> BLACK OPIUM INTENSE</option>
+                                <option value="BLACK OPIUM NUIT BLANCHE"> BLACK OPIUM NUIT BLANCHE</option>
+                                <option value="BLACK OPIUM FLORAL SHOCK"> BLACK OPIUM FLORAL SHOCK</option>
+                                <option value="CINEMA"> CINEMA</option>
+                                <option value="ELLE"> ELLE</option>
+                                <option value="MANIFESTO"> MANIFESTO</option>
+                                <option value="PARISIENNE"> PARISIENNE</option>
+                                <option value="MON PARIS"> MON PARIS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>اختر الحجم:</label>
+                            <div class="size-options">
+                                <input type="radio" id="size-women-30" name="size-women" value="30">
+                                <label for="size-women-30">30 مل</label>
+                                <input type="radio" id="size-women-50" name="size-women" value="50">
+                                <label for="size-women-50">50 مل</label>
+                                <input type="radio" id="size-women-100" name="size-women" value="100">
+                                <label for="size-women-100">100 مل</label>
+                            </div>
+
+
+                        </div>
+                        <!-- === عرض السعر === -->
+                        <div class="product-price-display">
+                            السعر: <span class="price-value">0.00</span> درهم
+                        </div>
+                        <!-- ================= -->
+                        <!-- قسم التحكم بالكمية -->
+                        <div class="form-group quantity-controls">
+                            <label>الكمية:</label>
+                            <div class="quantity-input">
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-decrease" aria-label="إنقاص الكمية">
+                                        <span class="span2">&minus;</span>
+                                    </button>
+                                </div>
+                                <span class="quantity-display">1</span>
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-increase" aria-label="زيادة الكمية">
+                                        <span class="span1">&plus;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-to-cart-btn" data-product-name="للنساء"><span class="golden-text">أضف
+                                للسلة</span></button>
+                    </div>
+
+                    <!-- بطاقة المنتج: رجالي -->
+                    <div class="product-card" data-product-id="men">
+                        <img src="img/IMG-20250210-WA0002.jpg" alt="عطر رجالي">
+                        <h3>عطر diezo للرجال</h3>
+                        <div class="form-group">
+                            <label for="perfume-type-men">اختر نوع العطر:</label>
+                            <div class="searchable-select-container">
+                                <input type="text" class="searchable-select-input" placeholder="ابحث أو اختر..." data-target-select="perfume-type-men">
+                                <div class="custom-options-list"></div>
+                            </div>
+
+
+                            <select id="perfume-type-men" class="perfume-type-select" name="perfume-type">
+                                <!-- <option value="" disabled selected>اختر...</option> -->
+                                <option value="AQUA DI GIO"> AQUA DI GIO</option>
+                                <option value="AQUA DI GIO PROFUMO"> AQUA DI GIO PROFUMO</option>
+                                <option value="AQUA DI GIO ABSOLUT"> AQUA DI GIO ABSOLUT</option>
+                                <option value="AQUA DI GIO PROFONDO"> AQUA DI GIO PROFONDO</option>
+                                <option value="CODE PROFUMO"> CODE PROFUMO</option>
+                                <option value="BLACK CODE"> BLACK CODE</option>
+                                <option value="STRONGER WITH YOU"> STRONGER WITH YOU</option>
+                                <option value="STRONGER WITH YOU INTENSLY"> STRONGER WITH YOU INTENSLY</option>
+                                <option value="YOU LEATHER"> YOU LEATHER</option>
+                                <option value="CODE ABSOLUT"> CODE ABSOLUT</option>
+                                <option value="ROSE ARABIE"> ROSE ARABIE</option>
+                                <option value="OUD ROYAL"> OUD ROYAL</option>
+                                <option value="CODE COLONIA"> CODE COLONIA</option>
+                                <option value="AZARO HOMME"> AZARO HOMME</option>
+                                <option value="CHROME"> CHROME</option>
+                                <option value="WANTED"> WANTED</option>
+                                <option value="WANTED BY NIGHT"> WANTED BY NIGHT</option>
+                                <option value="CHROME LEGEND"> CHROME LEGEND</option>
+                                <option value="MAN IN BLACK"> MAN IN BLACK</option>
+                                <option value="MAN IN BLACK ORIENT"> MAN IN BLACK ORIENT</option>
+                                <option value="WOOD ESSENCE"> WOOD ESSENCE</option>
+                                <option value="MAN"> MAN</option>
+                                <option value="MAN IN BLACK SUPER"> MAN IN BLACK SUPER</option>
+                                <option value="MAN GLACIAL ESSENCE"> MAN GLACIAL ESSENCE</option>
+                                <option value="CK ONE"> CK ONE</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>اختر الحجم:</label>
+                            <div class="size-options">
+                                <input type="radio" id="size-men-30" name="size-men" value="30">
+                                <label for="size-men-30">30 مل</label>
+                                <input type="radio" id="size-men-50" name="size-men" value="50">
+                                <label for="size-men-50">50 مل</label>
+                                <input type="radio" id="size-men-100" name="size-men" value="100">
+                                <label for="size-men-100">100 مل</label>
+                            </div>
+
+
+                        </div>
+                        <!-- === عرض السعر === -->
+                        <div class="product-price-display">
+                            السعر: <span class="price-value">0.00</span> درهم
+                        </div>
+                        <!-- ================= -->
+                        <!-- قسم التحكم بالكمية -->
+                        <div class="form-group quantity-controls">
+                            <label>الكمية:</label>
+                            <div class="quantity-input">
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-decrease" aria-label="إنقاص الكمية">
+                                        <span class="span2">&minus;</span>
+                                    </button>
+                                </div>
+                                <span class="quantity-display">1</span>
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-increase" aria-label="زيادة الكمية">
+                                        <span class="span1">&plus;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-to-cart-btn" data-product-name="للرجال">أضف للسلة</button>
+                    </div>
+
+                    <!-- بطاقة المنتج: للجنسين -->
+                    <div class="product-card" data-product-id="unisex">
+                        <img src="img/IMG-20250210-WA0003.jpg" alt="عطر للجنسين">
+                        <h3>عطر diezo للجنسين</h3>
+                        <div class="form-group">
+                            <label for="perfume-type-unisex">اختر نوع العطر:</label>
+                            <div class="searchable-select-container">
+                                <input type="text" class="searchable-select-input" placeholder="ابحث أو اختر..." data-target-select="perfume-type-unisex">
+                                <div class="custom-options-list"></div>
+                            </div>
+
+
+                            <select id="perfume-type-unisex" class="perfume-type-select" name="perfume-type">
+                                <!-- <option value="" disabled selected>اختر...</option> -->
+                                <option value="OUD ROYAL ARMANI PRIVE"> OUD ROYAL ARMANI PRIVE</option>
+                                <option value="VERT MALACHITE ARMANI PRIVE"> VERT MALACHITE ARMANI PRIVE</option>
+                                <option value="VERT MALACHITE"> VERT MALACHITE</option>
+                                <option value="ROUGE MALACHITE ARMANI PRIVE"> ROUGE MALACHITE ARMANI PRIVE</option>
+                                <option value="ROSE D'ARABIE ARMANI PRIVE"> ROSE D'ARABIE ARMANI PRIVE</option>
+                                <option value="PIVOINE SUZHOU ARMANI PRIVE"> PIVOINE SUZHOU ARMANI PRIVE</option>
+                                <option value="SABLE OR"> SABLE OR</option>
+                                <option value="STRONGER WITH YOU ONLY EDP"> STRONGER WITH YOU ONLY EDP</option>
+                                <option value="CODE LE PARFUM"> CODE LE PARFUM</option>
+                                <option value="BAL D'AFRIQUE"> BAL D'AFRIQUE</option>
+                                <option value="OUD COUTURE"> OUD COUTURE</option>
+                                <option value="OUD MALAKI"> OUD MALAKI</option>
+                                <option value="MUSC MALAKI"> MUSC MALAKI</option>
+                                <option value="MIEL D'ARABIE"> MIEL D'ARABIE</option>
+                                <option value="AMBRE NUIT"> AMBRE NUIT</option>
+                                <option value="BOIS D'ARGENT"> BOIS D'ARGENT</option>
+                                <option value="COLOGNE ROYAL"> COLOGNE ROYAL</option>
+                                <option value="FEVE DELICEUSE"> FEVE DELICEUSE</option>
+                                <option value="GRIS MONTAGNE"> GRIS MONTAGNE</option>
+                                <option value="LEATHER OUD"> LEATHER OUD</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>اختر الحجم:</label>
+                            <div class="size-options">
+                                <input type="radio" id="size-unisex-30" name="size-unisex" value="30">
+                                <label for="size-unisex-30">30 مل</label>
+                                <input type="radio" id="size-unisex-50" name="size-unisex" value="50">
+                                <label for="size-unisex-50">50 مل</label>
+                                <input type="radio" id="size-unisex-100" name="size-unisex" value="100">
+                                <label for="size-unisex-100">100 مل</label>
+                            </div>
+
+
+                        </div>
+                        <!-- === عرض السعر === -->
+                        <div class="product-price-display">
+                            السعر: <span class="price-value">0.00</span> درهم
+                        </div>
+                        <!-- ================= -->
+                        <!-- قسم التحكم بالكمية -->
+                        <div class="form-group quantity-controls">
+                            <label>الكمية:</label>
+                            <div class="quantity-input">
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-decrease" aria-label="إنقاص الكمية">
+                                        <span class="span2">&minus;</span>
+                                    </button>
+                                </div>
+                                <span class="quantity-display">1</span>
+                                <div class="btn">
+                                    <button type="button" class="quantity-btn quantity-increase" aria-label="زيادة الكمية">
+                                        <span class="span1">&plus;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="add-to-cart-btn" data-product-name="للجنسين">أضف للسلة</button>
+                    </div>
+                </div>
+                <!-- === شريط إشعار إضافة/تحديث العنصر (سفلي) === -->
+                <div id="item-notification-bar">
+                    <div id="item-notification-content">
+                        <!-- محتوى إشعار العنصر سيُدرج هنا -->
+                    </div>
+                    <!-- <button id="close-item-notification" title="إغلاق">×</button> -->
+                </div>
+                <!-- <div class="cart-section">
+            <h2>سلة المشتريات</h2>
+            <ul id="cart-items">
+            </ul>
+            <div id="cart-total-display" style="display: none;">
+                <strong>المجموع الإجمالي: <span id="cart-total-value">0</span> درهم</strong>
+            </div>
+            <div class="cart-actions">
+                <button id="checkout-btn" style="display: none;">إتمام الشراء</button>
+                <button id="clear-cart-btn" style="display: none;">إفراغ السلة</button>
+            </div>
+        </div> -->
+            </div>
+        </div>
+
+        <div class="site-policy">
+            <div class="footer-content-display" id="aboutStor">
+                <h1 class="footer-h1">عن المتجر</h1>
+                <p class="footer-p">
+                    مرحبًا بك في <strong>Diezo</strong>، وجهتك الفاخرة لعالم العطور الفريدة والتجربة العطرية الراقية.
+                    نحن لا نقدم فقط عطورًا، بل نمنحك تجربة تسوق إلكترونية استثنائية تنبض بالأناقة والذوق الرفيع.
+                </p>
+                <p class="footer-p">
+                    في <strong>Diezo</strong>، نحرص على اختيار تشكيلة متميزة من العطور الرجالية، النسائية، والعطور
+                    الموحدة
+                    (Unisex)،
+                    بالإضافة إلى تصاميم عطرية خاصة تُصنع بإبداع لتناسب ذوقك الشخصي.
+                </p>
+                <ul class="footer-ul">
+                    <li><strong>جودة مضمونة:</strong> جميع عطورنا مختارة بعناية من أفضل المكونات العالمية.</li>
+                    <li><strong>أسعار منافسة:</strong> استمتع بعطور راقية بأسعار مدروسة، دون المساومة على الجودة.</li>
+                    <li><strong>تجربة تسوق سهلة وآمنة:</strong> نُوفر لك واجهة استخدام بسيطة، وسائل دفع متنوعة، وخدمة
+                        توصيل
+                        سريعة إلى باب منزلك.</li>
+                </ul>
+                <p class="footer-p">
+                    نحن نؤمن بأن العطر هو أكثر من مجرد رائحة – إنه أسلوب حياة.
+                    اختر عطرك الآن من <strong>Diezo</strong>، ودعنا نُكمل أناقتك.
+                </p>
+            </div>
+
+            <div class="footer-content-display" id="paymentMethods">
+                <h1 class="footer-h1">طرق الدفع</h1>
+
+                <p class="footer-p">في <strong>Diezo</strong>، نحرص على أن تكون تجربة التسوق الخاصة بك مريحة وآمنة من
+                    اللحظة
+                    الأولى وحتى استلامك
+                    لطلبك. ولهذا السبب، نُوفر حالياً وسيلة دفع واحدة عملية وسهلة، وسنعمل قريبًا على توسيع خيارات الدفع
+                    لتناسب
+                    الجميع.</p>
+
+                <h2 class="footer-h2"> الدفع نقدًا عند الاستلام (COD)</h2>
+                <p class="footer-p">حاليًا، يمكنك التسوق بثقة عبر متجر <strong>Diezo</strong> واختيار المنتجات التي
+                    تفضلها،
+                    ثم
+                    تحديد خيار
+                    <strong>الدفع عند الاستلام</strong> عند تأكيد الطلب.<br>
+                    بهذه الطريقة، لا حاجة لأي دفع إلكتروني مقدمًا — بل ستقوم بتسديد قيمة مشترياتك مباشرة عند استلامها من
+                    مندوب
+                    التوصيل، في العنوان الذي تحدده سواء كان منزلًا، مكان عمل، أو أي موقع يناسبك.
+                </p>
+
+                <ul class="footer-ul">
+                    <li> آمن وسهل</li>
+                    <li> لا حاجة لحساب بنكي أو بطاقة</li>
+                    <li> مثالي للشراء السريع والمريح</li>
+                </ul>
+
+                <h2 class="footer-h2"> طرق الدفع المستقبلية</h2>
+                <p class="footer-p">نعمل في <strong>Diezo</strong> على تطوير منظومتنا لتوفير وسائل دفع إلكترونية متعددة
+                    في
+                    المستقبل القريب، تشمل:
+                </p>
+
+                <ul class="footer-ul">
+                    <li>💳 الدفع الإلكتروني باستخدام بطاقات الدفع البنكية</li>
+                    <li>🔄 التحويل البنكي المحلي والدولي</li>
+                    <li>🌐 الدفع عبر PayPal</li>
+                </ul>
+
+                <p class="footer-p">نحن نؤمن بأن مرونة الدفع هي جزء أساسي من تجربة التسوق العصرية، لذلك نعدكم بأن نُعلن
+                    قريبًا
+                    عن التحديثات
+                    الجديدة حالما تكون جاهزة.</p>
+            </div>
+
+            <div class="footer-content-display" id="shippingHandling">
+                <h1 class="footer-h1">الشحن والتوصيل</h1>
+                <p class="footer-p">
+                    في <strong>Diezo</strong>، نحرص على أن تصلكم طلباتكم بأسرع وقت وبأعلى درجات الأمان والاحترافية. بعد
+                    تأكيد
+                    عملية الشراء، يتم تجهيز طلبكم بعناية ثم شحنه وتوصيله باستخدام إحدى الطرق التالية:
+                </p>
+
+                <h2 class="footer-h2">🛵 مسؤول التوصيل الخاص بـ Diezo:</h2>
+                <p class="footer-p">
+                    لدينا فريق توصيل محترف يعمل مباشرة مع متجر Diezo في عدد من المدن. يتكفل هذا الفريق بإيصال الطلبات
+                    إلى
+                    باب
+                    منزلكم خلال مدة تتراوح بين <strong>يوم إلى ثلاثة أيام</strong>، حسب موقعكم الجغرافي.
+                </p>
+
+                <h2 class="footer-h2">🚚 شركة Ozone للشحن:</h2>
+                <p class="footer-p">
+                    نستعين أيضًا بشركة <strong>Ozone</strong> المتخصصة في خدمات التوصيل السريع، لتأمين إيصال طلباتكم إلى
+                    العنوان المطلوب خلال <strong> يوم إلى ثلاثة أيام</strong> عمل، وذلك بحسب المدينة أو المنطقة.
+                </p>
+
+                <div class="note">
+                    <p class="footer-p"><strong>ملاحظة:</strong> بعد تأكيد الطلب، سيتم التواصل معكم لتأكيد تفاصيل
+                        العنوان
+                        وطريقة
+                        التوصيل الأنسب
+                        لكم.</p>
+                    <p class="footer-p">نعمل جاهدين لتوصيل الطلبات في الوقت المحدد، ونوافيكم برقم التتبع بمجرد شحن الطرد
+                        (في
+                        حال
+                        توفره مع شركة
+                        الشحن).</p>
+                </div>
+            </div>
+
+            <div class="footer-content-display" id="termsOfUse">
+                <h1 class="footer-h1">شروط الاستخدام</h1>
+
+                <section>
+                    <h2 class="footer-h2">المقدمة</h2>
+                    <p class="footer-p">مرحبًا بكم في موقع "Diezo"، متجر إلكتروني متخصص في بيع العطور المستوحاة من
+                        العلامات
+                        التجارية الشهيرة.
+                        باستخدامك لهذا الموقع، فإنك توافق على الالتزام بالشروط والأحكام التالية. إذا كنت لا توافق على
+                        هذه
+                        الشروط، يُرجى عدم استخدام الموقع. نحتفظ بالحق في تعديل هذه الشروط في أي وقت، وتصبح التعديلات
+                        سارية
+                        فور
+                        نشرها على الموقع. يُنصح بمراجعة هذه الشروط دوريًا للاطلاع على أي تحديثات.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">استخدام الموقع</h2>
+                    <p class="footer-p">للاستفادة من خدمات موقع "Diezo"، يجب أن يكون عمرك 18 عامًا على الأقل أو أن
+                        تستخدم
+                        الموقع
+                        تحت إشراف ولي
+                        أمر أو وصي قانوني. نمنحك ترخيصًا محدودًا وغير قابل للتحويل للوصول إلى الموقع واستخدامه لأغراض
+                        التسوق
+                        الشخصي فقط. يُحظر الاستخدام التجاري أو الاستخدام نيابةً عن أي طرف ثالث دون الحصول على موافقة
+                        خطية
+                        مسبقة.
+                        أي انتهاك لهذه الشروط يؤدي إلى إلغاء الترخيص الممنوح دون إشعار مسبق.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">معلومات المنتجات</h2>
+                    <p class="footer-p">يقدم موقع "Diezo" عطورًا مستوحاة من العلامات التجارية المعروفة. نؤكد أن هذه
+                        المنتجات
+                        ليست أصلية، بل هي
+                        مستوحاة منها. نحن ملتزمون بتقديم معلومات دقيقة حول المنتجات، ولكن قد تحدث بعض الأخطاء أو السهو.
+                        لا
+                        نضمن
+                        أن تكون أوصاف المنتجات أو أي محتوى آخر على الموقع دقيقة أو كاملة أو حديثة. إذا كان المنتج الذي
+                        تلقيته
+                        يختلف عن الوصف الموجود على الموقع، يمكنك إعادته وفقًا لسياسة الإرجاع الخاصة بنا.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">الأسعار والدفع</h2>
+                    <p class="footer-p">جميع الأسعار المعروضة على الموقع بالدرهم المغربي (MAD) وتخضع للتغيير دون إشعار
+                        مسبق.
+                        نقبل طرق الدفع
+                        المبينة على الموقع. يجب عليك تقديم معلومات دفع دقيقة وصحيحة، وتتحمل مسؤولية أي رسوم ناتجة عن
+                        تقديم
+                        معلومات غير صحيحة.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">العلامات التجارية وحقوق النشر</h2>
+                    <p class="footer-p">جميع المحتويات المتوفرة على موقع "Diezo"، بما في ذلك النصوص والرسومات والشعارات
+                        والصور،
+                        هي ملك لموقع
+                        "Diezo" ومحفوظة بموجب قوانين حقوق النشر. يُحظر استخدام أي محتوى دون الحصول على إذن خطي مسبق منا.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">القانون الساري والاختصاص القضائي</h2>
+                    <p class="footer-p">تُفسر هذه الشروط والأحكام وتُطبق وفقًا لقوانين المملكة المغربية. أي نزاع ينشأ عن
+                        استخدام
+                        هذا الموقع يخضع
+                        للاختصاص القضائي الحصري لمحاكم المملكة المغربية.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">إخلاء المسؤولية</h2>
+                    <p class="footer-p">نحن في "Diezo" نبيع عطورًا مستوحاة من العلامات التجارية الشهيرة وليست أصلية.
+                        نؤكد أن
+                        هذه
+                        المنتجات لا تحمل
+                        العلامات التجارية الأصلية، ولا ندعي أنها منتجات رسمية من تلك العلامات. نحن نحترم قوانين الملكية
+                        الفكرية
+                        ونلتزم بها.</p>
+                </section>
+
+                <section>
+                    <h2 class="footer-h2">الاتصال بنا</h2>
+                    <p class="footer-p">إذا كان لديك أي أسئلة أو استفسارات حول هذه الشروط والأحكام، يُرجى التواصل معنا
+                        عبر
+                        معلومات الاتصال
+                        المتوفرة على الموقع.</p>
+                </section>
+
+                <p class="footer-p">باستخدامك لموقع "Diezo"، فإنك تقر بأنك قرأت هذه الشروط والأحكام وتوافق على الالتزام
+                    بها.
+                </p>
+            </div>
+
+            <div class="footer-content-display" id="ReplacementRefund">
+                <h1 class="footer-h1">سياسة الاستبدال والاسترجاع</h1>
+
+                <ul class="footer-ul">
+                    <li>الاستبدال والاسترجاع حق مضمون لجميع عملائنا، ويشمل كافة المنتجات المعروضة في متجرنا.</li>
+                    <li>تخضع جميع المنتجات لسياسة الاستبدال والاسترجاع وفق الشروط والأحكام المدرجة في هذه الصفحة.</li>
+                    <li>يمكن الاسترجاع أو الاستبدال في حال كانت المنتجات بحالتها الأصلية وغير مفتوحة، وبنفس التغليف
+                        الأصلي.
+                    </li>
+                    <li>مدة الاسترجاع: خلال ثلاثة (3) أيام من تاريخ الشراء.</li>
+                    <li>مدة الاستبدال: خلال سبعة (3) أيام من تاريخ الشراء.</li>
+                    <li>للاسترجاع أو الاستبدال، يُرجى التواصل معنا عبر صفحة "اتصل بنا" أو من خلال الأرقام الهاتفية
+                        المتوفرة
+                        على
+                        الموقع.</li>
+                    <li>يرجى إرسال صورة للمنتج مع توضيح المدينة والعنوان ورقم الطلب، في حال كان المنتج معيباً أو مختلفاً
+                        عن
+                        الوصف.</li>
+                    <li>يُسترجع كامل المبلغ في حال كان المنتج المرسل مختلفًا تمامًا عن وصف المنتج في موقعنا.</li>
+                    <li>لسنا مسؤولين عن أي توقعات للاستخدام لم يتم ذكرها في صفحة المنتج.</li>
+                    <li>في حالة الاسترجاع بدون وجود أي عيب في المنتج، يتم خصم تكلفة الشحن فقط.
+                    </li>
+                </ul>
+            </div>
+            <div class="whatsapp-button">
+                <a href="https://wa.me/212600000000" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi-whatsapp" viewBox="0 0 16 16">
+                        <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232" />
+                    </svg>
+                    <!-- <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png"/> -->
+                </a>
+            </div>
+
+            <div class="footer-content-display" id="privacyPolicy">
+                <h1 class="footer-h1"> سياسة الخصوصية</h1>
+                <p class="footer-p">
+                    في موقع <strong>Diezo</strong> للعطور، نولي اهتمامًا بالغًا بحماية خصوصيتك وبياناتك الشخصية، ونتعامل
+                    معها
+                    بأقصى درجات السرية والاحترام. تهدف هذه السياسة إلى توضيح كيفية جمعنا لمعلوماتك، وكيفية استخدامها،
+                    وحمايتها،
+                    والخيارات المتاحة لك.
+                </p>
+
+                <h2 class="footer-h2">أولاً: التزامنا بخصوصيتك</h2>
+                <p class="footer-p">نحن في Diezo نلتزم بالحفاظ على سرية المعلومات التي تشاركها معنا عند استخدامك لموقعنا
+                    الإلكتروني أو عند تفاعلك
+                    مع خدماتنا.</p>
+
+                <h2 class="footer-h2">ثانياً: المعلومات التي نقوم بجمعها</h2>
+                <ul class="footer-ul">
+                    <li>الاسم الكامل</li>
+                    <li>عنوان البريد الإلكتروني</li>
+                    <li>رقم الهاتف</li>
+                    <li>عنوان التوصيل</li>
+                    <li>بيانات الدفع (عند الشراء)</li>
+                    <li>نوع العطر المفضل أو سجل المشتريات</li>
+                </ul>
+
+                <h2 class="footer-h2">ثالثاً: كيف نستخدم معلوماتك؟</h2>
+                <ul class="footer-ul">
+                    <li>معالجة الطلبات وتوصيل المنتجات إليك</li>
+                    <li>تحسين جودة خدماتنا وتجربتك الشرائية</li>
+                    <li>التواصل معك بشأن العروض أو المنتجات الجديدة (إذا وافقت على ذلك)</li>
+                    <li>تلبية استفساراتك أو حل مشكلاتك بسرعة</li>
+                </ul>
+
+                <h2 class="footer-h2">رابعاً: التزامنا بحماية بياناتك</h2>
+                <p class="footer-p">نطبق في Diezo أحدث تقنيات الحماية الرقمية لضمان أمان بياناتك، بما في ذلك:</p>
+                <ul class="footer-ul">
+                    <li>تشفير البيانات عند النقل باستخدام SSL</li>
+                    <li>أنظمة حماية قوية ضد الاختراقات</li>
+                    <li>وصول محدود فقط للمسؤولين المعنيين بالبيانات</li>
+                </ul>
+
+                <h2 class="footer-h2">خامساً: ملفات تعريف الارتباط (Cookies)</h2>
+                <p class="footer-p">نستخدم الكوكيز لتحسين تجربتك على موقعنا. يمكنك دائمًا تعطيل الكوكيز من إعدادات
+                    المتصفح،
+                    ولكن
+                    قد تتأثر بعض
+                    وظائف الموقع.</p>
+
+                <h2 class="footer-h2">سادساً: الشفافية والموافقة</h2>
+                <p class="footer-p">لن نشارك بياناتك مع أي طرف ثالث دون موافقتك، إلا لأغراض تنفيذ الطلب أو الامتثال
+                    للقانون.
+                </p>
+
+                <h2 class="footer-h2">سابعاً: حقوقك كعميل</h2>
+                <ul class="footer-ul">
+                    <li>طلب نسخة من بياناتك الشخصية</li>
+                    <li>تعديل بياناتك أو حذفها</li>
+                    <li>الانسحاب من الرسائل التسويقية</li>
+                </ul>
+
+                <h2 class="footer-h2">ختـامًا</h2>
+                <p class="footer-p">
+                    خصوصيتك هي من أولوياتنا في <strong>Diezo</strong>، ونحن ملتزمون بحمايتها في كل الأوقات، لضمان تجربة
+                    تسوق
+                    عطرية راقية وآمنة.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer container">
+            <div class="footer-brand" style="text-align: center;">
+                <a href="#" id="brand-link-to-home">
+                    <img width="80" src="icons/logo-casariha-04.png" alt="diezo">
+                </a>
+            </div>
+            <div class="footer-body">
+                <div class="footer-item">
+                    <h3>عن المتجر</h3>
+                    <ul class="footer-list">
+                        <li><a href="/pages/about-us">عن المتجر</a></li>
+                        <li><a href="/pages/how-to-pay"> طرق الدفع</a></li>
+                        <li><a href="/pages/shipping-delivery"> الشحن والتسليم</a></li>
+                    </ul>
+                </div>
+                <div class="footer-item">
+                    <h3>الشروط والسياسات</h3>
+                    <ul class="footer-list">
+                        <li><a href="#/termsOfUse">شروط الاستخدام</a></li>
+                        <li><a href="#/ReplacementRefund">سياسة الاستبدال والاسترجاع</a></li>
+                        <li><a href="#/privacyPolicy">سياسة الخصوصية</a></li>
+                    </ul>
+                </div>
+                <div class="footer-item">
+                    <h3>اتصل بنا</h3>
+                    <ul class="footer-list">
+                        <li><a href="/pages/contact-us">اتصل بنا</a></li>
+                        <li><a href="/pages/faq">الأسئلة المتكررة</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- === النافذة المنبثقة (Modal) لإتمام الشراء === -->
+    <div id="checkout-modal-overlay" class="modal-overlay">
+        <div class="modal-content checkout">
+            <h2>إتمام عملية الشراء</h2>
+            <h3>اختر باقة العرض المناسبة لك:</h3>
+            <div class="offers">
+                <!-- داخل <div class="offers"> -->
+                <label class="offer-option">
+                    <!-- القيمة value يمكن أن تكون مفيدة في JS -->
+                    <input type="radio" name="static_offer_bundle" value="10_pack" data-price="255" />
+                    <div class="offer-details">
+                        <!-- تغيير النص -->
+                        <span class="offer-title">باقة 10 عطور (30 مل)</span>
+                        <span class="offer-price">255 درهم</span>
+                        <!-- النص الأصلي للخصم قد يكون مضللاً هنا، يمكن تعديله أو إزالته -->
+                        <span class="offer-discount">يشمل خصم 15% وشحن مجاني</span>
+                    </div>
+                </label>
+                <label class="offer-option">
+                    <input type="radio" name="static_offer_bundle" value="5_pack" data-price="149" checked />
+                    <div class="offer-details">
+                        <span class="offer-title">باقة 5 عطور (30 مل)</span>
+                        <span class="offer-price">149 درهم</span>
+                        <span class="offer-discount">شحن مجاني</span> <!-- توضيح الشحن -->
+                    </div>
+                </label>
+                <!-- ملاحظة: غيرت اسم name إلى static_offer_bundle لتمييزه -->
+                <!-- أضفت data-price لتسهيل الحصول على السعر في JS -->
+            </div>
+
+            <!-- قسم جديد داخل modal-content.checkout -->
+            <div class="form-group" id="static-offer-gender-selector" style="display: none;"> <!-- يبدأ مخفياً -->
+                <label class="required">اختر فئة العطور للباقة:</label>
+                <div class="size-options" style="justify-content: center; margin-top: 10px;">
+                    <input type="radio" id="offer-gender-men" name="offer_gender" value="men" required>
+                    <label for="offer-gender-men">مجموعة رجالية</label>
+                    <input type="radio" id="offer-gender-women" name="offer_gender" value="women">
+                    <label for="offer-gender-women">مجموعة نسائية</label>
+                    <!-- يمكن إضافة خيار "منوع" إذا أردت تعقيداً أكثر -->
+                </div>
+            </div>
+
+            <form id="checkout-form" class="order-form">
+                <div class="form-group">
+                    <label for="fullName" class="required">اسمك الكامل</label>
+                    <input type="text" id="fullName" placeholder="أدخل اسمك الكامل" required />
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="required">هاتفك</label>
+                    <input type="tel" id="phone" placeholder="أدخل رقم هاتفك" required />
+                </div>
+                <div class="form-group">
+                    <label for="address" class="required">عنوانك</label>
+                    <input type="text" id="address" placeholder="أدخل عنوانك بالتفصيل" required />
+                </div>
+                <div class="form-group">
+                    <label for="city" class="required">المدينة</label>
+                    <input type="text" id="city" placeholder="أدخل مدينتك" required />
+                </div>
+                <div class="form-group">
+                    <label for="notes">ملاحظاتك (اختياري)</label>
+                    <textarea id="notes" placeholder="إذا لديك أي ملاحظات إضافية حول الطلب أو التوصيل"></textarea>
+                </div>
+                <button type="submit" class="submit-btn">
+                    أكد الطلب الآن (توصيل مجاني)
+                </button>
+            </form>
+        </div>
+    </div>
+    <!-- === نافذة منبثقة للإشعارات (Notification Modal) === -->
+    <div id="notification-modal-overlay" class="modal-overlay notification-overlay" style="display: none;">
+        <div id="notification-modal-content" class="modal-content notification-content">
+            <!-- <button id="close-notification-modal" class="close-modal-btn">×</button> -->
+            <div id="notification-message">
+                <!-- محتوى الرسالة سيُدرج هنا -->
+            </div>
+            <!-- زر العودة للتسوق -->
+            <div class="modal-actions" style="display: none;">
+                <button type="button" id="continue-shopping-btn" class="continue-shopping-btn">العودة للتسوق</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+
+    <!-- 
+    نموذج الشحن:
+
+    تمت إضافة مستمع حدث submit للنموذج داخل الـ Modal.
+    
+    event.preventDefault() لمنع الإرسال التقليدي.
+    
+    يتم جمع بيانات النموذج وبيانات السلة.
+    
+    (مهم) في هذا المثال، يتم فقط عرض البيانات في الـ Console ورسالة alert. في تطبيق حقيقي، يجب إرسال هذه البيانات إلى خادم باستخدام AJAX (مثل fetch أو XMLHttpRequest).
+    
+    بعد "الإرسال الناجح" (في مثالنا، بعد عرض الـ alert)، يتم إغلاق الـ Modal، إفراغ السلة، وإعادة عرضها.
+      -->
+
+</body>
+
+</html>
